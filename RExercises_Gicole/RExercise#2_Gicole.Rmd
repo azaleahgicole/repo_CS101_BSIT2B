@@ -1,0 +1,113 @@
+---
+title: "R Exercise 2"
+author: "Azaleah Gicole"
+date: "2026-09-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A - Arithmetic Operations
+
+##1
+```{r}
+a <- 17
+b <- 5
+
+a + b
+a - b
+a * b
+a / b
+```
+##2
+```{r}
+a <- 17
+b <- 5
+
+a %% b
+a %/% b
+```
+##3
+```{r}
+2^10
+```
+##Q1
+```{r}
+17 / 5
+17 %% 5
+17 %/% 5
+```
+These three operations are related because they are a part of a division operation. The first one prints the exact quotient with a decimal, the second one prints its remainder, and the third one prints only the integer.
+##Q2
+```{r}
+10 %% 3
+10 %/% 3
+```
+I predicted the answer correctly, guessing 10 %% 3 prints the remainder 1 while 10 %/% 3 prints the integer 3.
+
+## Part B - Basic Data Type
+##1
+```{r}
+x <- 42
+typeof(x)
+y <- 42L
+typeof(y)
+z <- "42"
+typeof(z)
+w <- TRUE
+typeof(w)
+v <- 3 + 2i
+typeof(v)
+```
+##2
+```{r}
+x <- 42
+class(x)
+y <- 42L
+class(y)
+z <- "42"
+class(z)
+w <- TRUE
+class(w)
+v <- 3 + 2i
+class(v)
+```
+##3
+```{r}
+x <- 42
+mode(x)
+y <- 42L
+mode(y)
+z <- "42"
+mode(z)
+w <- TRUE
+mode(w)
+v <- 3 + 2i
+mode(v)
+```
+##Q3 - x <- 42 and y <- 42L give different answers because y has the letter L in its value, turning the numeric value 42 into an integer instead.
+
+##Q4 - Yes, typeof() gives a different output on the number values. It uses double and integer instead of numeric to check the first two classes.
+
+## Part C - Type Conversion
+##1
+```{r}
+num_string <- "123"
+num_v <- as.numeric("num_string")
+typeof(num_v)
+class(num_v)
+mode(num_v)
+```
+##2
+```{r}
+as.logical(0)
+```
+Converting 0 to 1 would result to FALSE.
+##3
+```{r}
+bad_string <- "hello123"
+good_string <- as.numeric(bad_string)
+```
+
