@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Part A - Arithmetic Operations
 
-##1
+#1
 ```{r}
 a <- 17
 b <- 5
@@ -21,7 +21,7 @@ a - b
 a * b
 a / b
 ```
-##2
+#2
 ```{r}
 a <- 17
 b <- 5
@@ -29,26 +29,27 @@ b <- 5
 a %% b
 a %/% b
 ```
-##3
+#3
 ```{r}
 2^10
 ```
-##Q1
+#Q1
 ```{r}
 17 / 5
 17 %% 5
 17 %/% 5
 ```
-These three operations are related because they are a part of a division operation. The first one prints the exact quotient with a decimal, the second one prints its remainder, and the third one prints only the integer.
-##Q2
+#Q1 - These three operations are related because they are a part of a division operation. The first one prints the exact quotient with a decimal, the second one prints its remainder, and the third one prints only the integer.
+
+#Q2
 ```{r}
 10 %% 3
 10 %/% 3
 ```
-I predicted the answer correctly, guessing 10 %% 3 prints the remainder 1 while 10 %/% 3 prints the integer 3.
+#Q2 - I predicted the answer correctly, guessing 10 %% 3 prints the remainder 1 while 10 %/% 3 prints the integer 3.
 
 ## Part B - Basic Data Type
-##1
+#1
 ```{r}
 x <- 42
 typeof(x)
@@ -61,7 +62,7 @@ typeof(w)
 v <- 3 + 2i
 typeof(v)
 ```
-##2
+#2
 ```{r}
 x <- 42
 class(x)
@@ -74,7 +75,7 @@ class(w)
 v <- 3 + 2i
 class(v)
 ```
-##3
+#3
 ```{r}
 x <- 42
 mode(x)
@@ -87,12 +88,12 @@ mode(w)
 v <- 3 + 2i
 mode(v)
 ```
-##Q3 - x <- 42 and y <- 42L give different answers because y has the letter L in its value, turning the numeric value 42 into an integer instead.
+#Q3 - x <- 42 and y <- 42L give different answers because y has the letter L in its value, turning the numeric value 42 into an integer instead.
 
-##Q4 - Yes, typeof() gives a different output on the number values. It uses double and integer instead of numeric to check the first two classes.
+#Q4 - Yes, typeof() gives a different output on the number values. It uses double and integer instead of numeric to check the first two classes.
 
 ## Part C - Type Conversion
-##1
+#1
 ```{r}
 num_string <- "123"
 num_v <- as.numeric("num_string")
@@ -100,14 +101,87 @@ typeof(num_v)
 class(num_v)
 mode(num_v)
 ```
-##2
+#2
 ```{r}
 as.logical(0)
 ```
 Converting 0 to 1 would result to FALSE.
-##3
+#3
 ```{r}
 bad_string <- "hello123"
 good_string <- as.numeric(bad_string)
 ```
+#Q5.1 - R is designed to give warnings rather than errors because the code only has missing values. It keeps the program flowing, but only partially as it can be useful for analyzing what was wrong with the code.
+
+#Q5.2 - Ignoring the warnings might result the missing data (NA) to spread its missing value to other objects, which can corrupt the code.
+
+#Q6
+```{r}
+logi_1 <- as.logical(2)
+logi_1
+logi_2 <- as.logical(-1)
+logi_2
+```
+#Q6 - After conducting, as.logical(2) and as.logical(-1) both print TRUE. The rule that R follows is that it will only print FALSE if the number is 0, and will print true if it is a non-zero despite the number being positive or negative.
+
+## Part D - Strings, paste(), and paste0()
+#1
+```{r}
+first_name <- "Juan"
+last_name <- "Dela Cruz"
+cat(first_name)
+cat(last_name)
+```
+#2
+```{r}
+first_name <- "Juan"
+last_name <- "Dela Cruz"
+
+paste(first_name, last_name)
+paste0(first_name, last_name)
+```
+
+#2 - paste() prints both first and last name with a space between the two names, whereas paste0() combines the two names without leaving a gap.
+
+#3
+```{r}
+first_name <- "Juan"
+last_name <- "Dela Cruz"
+cat(first_name)
+cat(last_name)
+
+paste(first_name, last_name, sep = "-")
+```
+#4
+```{r}
+age <- 21
+first_name <- "Juan"
+last_name <- "Dela Cruz"
+full_name <- paste(first_name, last_name)
+paste0(full_name, " is ", age, " years old.")
+```
+
+#Q7 - Differentiating the two, paste() has its own default sep = " ", meaning it has a separator which is space. On the other hand, paste0() joins the two objects with nothing in between, not even space. This happened just like the example above, where paste(first_name, last_name) resulted to "Juan Dela Cruz", and paste0(first_name, last_name) printed "JuanDela Cruz".
+
+#Q8 - No, it did not cause an error. The rule of paste0() is it can turn numeric values into characters (from 21 to "21").
+
+## Part E - Critical Thinking Challenge
+#1
+```{r}
+#"5" + 5
+```
+#1 - already tested. Results in an error (non-numeric argument to binary operator)
+
+#2
+```{r}
+as.numeric("5") + 5
+```
+
+#Q9 - Based on my observation, R is very sensitive in terms of class types. It does not automatically change the class type of an object when running the code, it has to undergo conversions to avoid making incorrect decisions later on. This explicitly tells me that I have to be more specific in assigning values to avoid errors or make sure that R wouldn't make any guesses.
+
+#Q10 - In this situation, my classmate accidentally wrote the column of "numbers" as a character class type rather than numeric. This is because of the double quotations they typed. It is designed only for character objects, and it is impossible to use sum() when solving for non-numerical values. If I were to fix this, I would check first the class type of the said column. I have to make sure if it is accidentally declared as a "character" by using typeof(), class(), or mode(). Next, I will either edit the code and take out the double quotations, or use conversion as.numeric() to convert characters into numbers. Then, I will check if it displays a warning, as there may be values that are NA. I would check with sum(is.na(x)) to see how many NAs are there, and try to sum() again.
+
+## Conclusion
+# - After using and experimenting with R, I've learned that numbers, characters, and TRUE/FALSE results have their own class types. By using typeof(), class(), and mode(), it is easy to determine what values did I put, and what objects I should use for specific operations/conditions. In case of assigning wrong class types, conversions like as.numeric() can save up lots of time for me, enabling me to change the object's class type without going through all of the lines of code. And finally, it doesn't crash the program, but it gives a warning and still runs the code, which is a life saver for me as a beginner programmer.
+
 
