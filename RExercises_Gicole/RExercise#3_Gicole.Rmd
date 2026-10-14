@@ -1,0 +1,53 @@
+---
+title: "R Exercise 3"
+author: "Azaleah Gicole"
+date: "2026-10-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A - Vectors
+
+```{r}
+scores <- c(88, 92, 79, 95, 84)
+scores
+subjects <- c("Math", "Science", "English", "History", "PE")
+subjects
+
+odds <- seq(1, 19, by=2)
+odds
+seq(0, 1, length.out = 5)
+
+rep("A", 4)
+rep(c("A", "B"), each = 2)
+rep(c("A", "B"), 2)
+
+#Q1
+age <- c(15, 28, 32, 36, 27, 18, 52, 39, 42, 29, 35, 31, 27, 22, 37, 34, 19, 20, 57, 49, 50, 37, 46, 25, 17, 12, 42, 53, 41, 51, 35, 24, 33, 8)
+age
+
+#A. - There are 34 data points
+length(c(age))
+
+#B.
+recip <- 1 / age
+recip
+
+#C. - It prints the vector age, then prints zero, and then prints the vector age again.
+new_age <- c(age, 0, age)
+new_age
+
+#D. - Minimum age = 8, Maximum age = 57
+age <- c(min(age), max(age))
+age
+
+#Q2
+#The difference between each and times in rep() is how the code repeats the elements. In each, the code repeats the elements in order("A", "A", "B", "B" - A is repeated first, then followed by B) while in times, it repeats the elements alternately ("A', "B", "A", "B").
+
+#Q3
+#The arguments by and length.out has their own function. Using the by argument, it increments each elements depending on the 
+```
+
