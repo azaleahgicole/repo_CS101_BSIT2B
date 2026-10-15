@@ -1,0 +1,127 @@
+---
+title: "R Exercise 5"
+author: "Azaleah Gicole"
+date: "2026-10-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A — Creating Matrices
+```{r}
+m1 <- matrix(1:9, nrow = 3, ncol = 3)
+m1
+
+m2 <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE)
+m2
+
+scores <- matrix(c(88, 92, 79, 95, 84, 90), nrow = 2, ncol = 3, byrow = TRUE)
+rownames(scores) <- c("Quiz1", "Quiz2")
+colnames(scores) <- c("Ana", "Ben", "Cid")
+scores
+
+#Q1
+#Without setting up the byrow as TRUE, the code prints the order of the elements from column to column. By using byrow = TRUE, the elements are printed from row to row. So basically, it changes the position of the numbers, but the dimensions and numbers of the matrix remain the same.
+
+#Q2
+matrix(1:8, nrow = 3, ncol = 3)
+#The code still runs by recycling the data since there is a missing element slot. Instead of crashing midway, it goes back to 1:8 to recycle and store data on the missing spot, which is why 1 is printed in row 3, column 3 of the matrix. It also comes with a warning, wherein the code explains that 8 is not a multiple of 3, which caused the program itself to do the recycle rule of R.
+
+```
+
+## Part B — Subsetting Matrices
+```{r}
+scores[1, 2]
+scores[1, ]
+scores[, "Ben"]
+
+scores[scores >= 90]
+
+#Q3
+class(scores[1, ])
+class(scores[, "Ben"])
+#When a single row or column is pulled out of a matrix, R prints a list of numbers, called vectors, instead of a matrix. R does this automatically because a row or column does not require a grid, and a plain vector is easier to use with functions like mean() or sum(). To keep the matrix shape, scores[1, , drop = FALSE] can be used.
+
+#Q4
+#The scores[1, ] selects a whole row, so R keeps its values and names. scores >= 90 picks individual cells scattered around the matrix (95, 92, and 90), and those cells don't form a neat rectangle in which it couldn't be arranged into rows and columns. Because of this reason, R prints it as a plain vector with no row or column names.
+```
+
+## Part C — Matrix Properties and Operations
+```{r}
+dim(scores)
+nrow(scores)
+ncol(scores)
+scores_t <- t(scores)
+scores_t
+dim(scores_t)
+
+a <- matrix(1:4, nrow = 2)
+b <- matrix(5:8, nrow = 2)
+a + b
+a * b
+
+a %*% b
+
+#Q5
+#The element-wise multiplication, or *, multiplies each cell by the cell in the same position of the other matrix, so the top-left cell is 1 × 5 = 5. Matrix multiplication, or %*% works differently. Each cell in the outcome is caused by multiplying a row of the first matrix by a column of the second matrix, and adding up all of the products. This means the top-left cell is 1×5 + 3×6 = 23. This is why the two operations print different results despite using the same matrices.
+
+#Q6
+#Transposing turns every row into a column and otherwise, so the labels have to follow-through the data they describe. The old row names become the new column names, same with the old column names turning into new row names. Based on the given scores_t, "Ana", "Ben" and "Cid" are now the new row names, and "Quiz1" and "Quiz2" are now the ne column names.
+```
+
+## Part D — cbind() and rbind()
+```{r}
+scores_v2 <- cbind(scores, Dex = c(85, 91))
+scores_v2
+
+scores_v3 <- rbind(scores, Quiz3 = c(80, 88, 93))
+scores_v3
+
+#Q7
+cbind(scores, c(85, 91, 100))
+#R gives a warning instead of an error/crashing down and drops the extra value (100), so the new column prints incomplete. cbind() and rbind() need matching dimensions because a matrix should be a rectangle. The cbind() needs the same number of rows, and `rbind()` needs the same number of columns. If not done correctly, some cells would be empty or filled with random recycled values.
+
+#Q8
+#I can use rbind() when each new data is another observation with the same variables, so the dataset grows downward. For example, with a table of daily sales where the columns are named Product A, Product B and Product C. Each new day is a new row, so I could use rbind() on that day’s sales onto the existing table. I would use cbind() when I add a new variable for the same observations, such as a new product for the table of daily sales.
+```
+
+## Part E — Arrays: Creating and Subsetting
+```{r}
+arr <- array(1:12, dim = c(2, 3, 2))
+arr
+
+arr[1, 2, 2]
+arr[ , , 1]
+
+dim(arr)
+
+#Q9
+#The dim(arr) returns 2 3 2. The first number, which is 2, is the number of rows, the second one, number 3, is the number of columns, and the last one which is 2 is the number of layers, meaning how many 2×3 matrices are stacked together. Which is why arr[row, col, layer] needs three indices.
+
+#Q10
+#A real-life example is daily temperature readings for several barangays over several months. The rows are the days, the columns are the barangays, and the layers are the months. 
+#A 2D matrix can only hold two of these dimensions, so two would have to be merged, such as a column for every barangay and month together, which makes the data harder to read when there are three dimensions. An array keeps all three separate, so one month can be pulled out with arr[, , 2] or one barangay with `arr[, 1, ]`.
+```
+
+## Part F — Critical Thinking Challenge
+```{r}
+class_a <- matrix(c(85, 90, 78, 92), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S1", "S2"), c("Midterm", "Final")))
+class_b <- matrix(c(88, 84, 95, 91), nrow = 2, byrow = TRUE,
+                   dimnames = list(c("S3", "S4"), c("Midterm", "Final")))
+all_students <- rbind(class_a, class_b)
+all_students
+
+rowMeans(all_students)
+
+#Q11
+#For me, I choose rbind() because both matrices share the same column names (Midterm and Final), but have different row names (S1 and S2 in one, S3 and S4 in the other). This means these two categories describe different students measured on the same variables, so the new students should be stacked as additional rows. And personally, it looks more organized in that way, and easier to understand. If the row names had been the same but the columns different, they would be the same students with new variables, and cbind() would have been correct
+
+#Q12
+#To combine the five matrices, I would stack them since they all have the same two columns (Midterm and Final). Each class's students would turn in to extra rows in one larger matrix. After that, I would run dim() to make sure there are still 2 columns and the number of rows still match the total number of students in all five classes. Example output will be five classes with 2 students each should print out 10 rows. Or another example, if five classes have 5, 6, 4, 5 and 5 students encoded in the program, the total is 25, so dim() should show 25 rows and 2 columns.
+```
+
+## Conclusion
+#A matrix is a 2D structure with rows and columns, while an array can have any number of dimensions, such as rows, columns and layers but both can hold only one data type. cbind() and rbind() are useful for growing a dataset. A best example is tracking down weekly attendance for a clas.To execute this, I can use rbind() to add each new week as a row, or use cbind() to add a new student as a column, or vice versa. They only work when the dimensions line up correctly, which helps prevent accidentally mismatching values and prevent the program from printing random recycled data.
