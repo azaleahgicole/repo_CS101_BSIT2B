@@ -1,0 +1,132 @@
+---
+title: "R Exercise 6"
+author: "Azaleah Gicole"
+date: "2026-10-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A - Creating Data Frames
+```{r}
+name   <- c("Ana", "Ben", "Cid", "Dex", "Eli")
+age    <- c(20, 21, 19, 22, 20)
+passed <- c(TRUE, TRUE, FALSE, TRUE, FALSE)
+
+students <- data.frame(name = name, age = age, passed = passed)
+print(students)
+
+typeof(students$name)
+class(students$name)
+
+courses <- data.frame(
+  course_code = c("IS101", "IS102", "IS103"),
+  units       = c(3, 3, 2),
+  instructor  = c("Dr. P. Reyes", "Dr. R. Santos", "Dr. S. Cruz")
+)
+print(courses)
+
+#Q1
+# The data.frame() should have equal column length because this prevents the program from making a blank section of a table. Also, the number of rows need an assigned value in every column to avoid the rows not being matched up, otherwise there will be an error occuring when the user tries to run the code.
+
+#Q2
+# Based on my understanding, the reason why specifically a single column couldn't hold different data types is that a single column is a vector. And from the previous lessons, a vector can only hold one data type, so a single line of column cannot be both an integer and a character, but multiple columns like column 1 and column 2 can be an integer and a character separately.
+```
+
+## Part B - Subsetting Data Frames
+```{r}
+students$age
+students[["age"]]
+students["age"]
+
+students[2, ]
+students[3, "name"]
+students[students$passed == TRUE, ]
+students[students$passed == TRUE & students$age > 19, ]
+
+class(students$age)
+class(students[["age"]])
+class(students["age"])
+#Q3
+# The $ and [[]] is a numeric class, while the [] is a data frame. The difference is that the $ is the same as the double bracket ( [[]] ), and it prints out the value of each index of a vector. Meanwhile, the single bracket ( [] ) prints out the table-like structure of the said vector.
+
+#Q4
+# Each condition produces a row of boolean values or the TRUE OR FALSE. It checks them one row at a time and keeps a row only if both are TRUE. The final boolean list is what picks the rows to show. With the OR condition that prints out TRUE if at least one condition is true, the program adds the row. Example from the table above, Eli (age 20, didn’t pass) would now be included.
+```
+
+## Part C - Data Frame Properties
+```{r}
+str(students)
+
+dim(students)
+nrow(students)
+ncol(students)
+
+names(students)
+
+summary(students)
+
+#Q5
+# For numeric vectors like age, it shows the minimum, quartiles, median, mean, and maximum of numbers. For boolean or TRUE / FALSE values like passed, it counts how many are true and false in the vector. For text like name, it only shows the length, class, and mode. A mean doesn’t work for names because you can’t add up “Ana” and “Ben” since they are obviously characters and not numbers for calculation.
+
+#Q6
+# The str() is helpful when creating or loading data and want to check its structure. This involves how many rows and columns, and what type each column is in the data frame. On the other hand, summary() is helpful when trying to understand the values like the range, average, and counts.
+```
+
+## Part D - Data Frame Operations
+```{r}
+students$year_level <- c(2, 3, 1, 4, 2)
+
+students$passed <- NULL
+
+students[order(students$age), ]
+students[order(students$age, decreasing = TRUE), ]
+
+#Q7
+# No, the filter couldn't run. Once passed is set to NULL, the column is gone. The condition students$passed == TRUE gives an empty result with no error, which is easy to miss. This is why checking the data frame (with str() or names()) is important when making changes, since each step can affect the next and it would be hard to fix if not checked thoroughly.
+
+#Q8
+# The order() doesn’t sort anything itself. It gives the row numbers in the order they were assigned in the first place. For the ages 20, 21, 19, 22, 20, the program prints the numbers 3 1 5 2 4. And then, R uses those numbers to pick the rows in that order. Because the space after the comma means “all columns,” every column moves together and each student’s information stays in place.
+```
+
+## Part E - Critical Thinking Challenge
+```{r}
+grades <- data.frame(
+  name    = c("Ana", "Ben", "Cid", "Dex", "Eli"),
+  midterm = c(85, 78, 92, 88, 70),
+  final   = c(90, 82, 95, 84, 75)
+)
+
+grades$average <- (grades$midterm + grades$final) / 2
+
+grades$remarks <- ifelse(grades$average >= 75, "Passed", "Failed")
+
+grades[grades$remarks == "Failed", c("name", "average")]
+
+#Q9
+# Using the tools learner from the lecture notes given, I would do these steps:
+# I would add a change column: grades$change <- grades$final - grades$midterm. This determines which students dropped.
+
+grades$change <- grades$final - grades$midterm
+
+# Next, I will sort by "change" ascending to see who dropped the most, and note whether those students have failed.
+
+grades[order(grades$change), c("name", "midterm", "final", "change", "remarks")]
+
+# Then, filter or sort for low midterm scores, to check their remarks and see if they failed. And I will compare the two lists to see which one overlaps more with the "Failed" rows.
+
+grades[order(grades$midterm), c("name", "midterm", "final", "change", "remarks")]
+
+grades[grades$change < 0, c("name", "change", "remarks")]
+grades[grades$midterm < 75, c("name", "midterm", "remarks")]
+
+# Lastly, I will look at students who had a big drop but only have one or two problems (and vice versa) to see the factor that led them to failing the midterm
+
+grades[grades$change < 0 & grades$midterm >= 75, ]
+grades[grades$change >= 0 & grades$midterm < 75, ]
+```
+
+## Conclusion
+# A data frame for R is a way of storing values in a table. It consists of list of vectors of the same length, where each column line holds only one type of data. The data frame is made up of vectors, which are called columns, and lists that allow different data types across columns. This can filter, sort, add, or even delete data easily. It is useful for R to have a data frame as a primary structure because real-world data comes in tables with mixed data types, especially for businesses that requires calculations and customer lists, or for education that holds up student information and grades.
