@@ -1,0 +1,127 @@
+---
+title: "R Exercise 7"
+author: "Azaleah Gicole"
+date: "2026-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A - Creating Data Frames
+
+```{r}
+#TODO_1
+#Q1
+respondents <- 1:20
+sex <- c(2, 2, 1, 2, 2, 2, 2, 2, 2, 2,
+         1, 2, 2, 2, 2, 2, 2, 2, 1, 1)
+fathers_occupation <- c(1, 3, 3, 3, 1, 2, 3, 1, 1, 1,
+                        3, 2, 1, 3, 3, 1, 3, 1, 2, 1)
+persons_at_home <- c(5, 7, 3, 8, 5, 9, 6, 7, 8, 4,
+                     7, 5, 4, 7, 8, 8, 3, 11, 7, 6)
+siblings_at_school <- c(6, 4, 4, 1, 2, 1, 5, 3, 1, 2,
+                        3, 2, 5, 5, 2, 1, 2, 5, 3, 2)
+types_of_houses <- c(1, 2, 3, 1, 1, 3, 3, 1, 2, 3,
+                     2, 3, 2, 2, 3, 3, 3, 3, 3, 2)
+
+sapply(list(respondents, sex, fathers_occupation,
+            persons_at_home, siblings_at_school, types_of_houses),
+       length)
+
+#TODO_2
+survey <- data.frame(
+  Respondents       = respondents,
+  Sex               = sex,
+  FathersOccupation = fathers_occupation,
+  PersonsAtHome     = persons_at_home,
+  SiblingsAtSchool  = siblings_at_school,
+  TypesOfHouses     = types_of_houses
+)
+
+survey
+
+#A
+str(survey)
+summary(survey)
+
+#B
+dim(survey)
+nrow(survey)
+ncol(survey)
+
+#C
+survey$Sex <- factor(survey$Sex,
+                     levels = c(1, 2),
+                     labels = c("Male", "Female"))
+
+survey$FathersOccupation <- factor(survey$FathersOccupation,
+                                   levels = c(1, 2, 3),
+                                   labels = c("Farmer", "Driver", "Others"))
+
+survey$TypesOfHouses <- factor(survey$TypesOfHouses,
+                               levels = c(1, 2, 3),
+                               labels = c("Wood", "Semi-Concrete", "Concrete"))
+
+str(survey)
+
+#D
+sapply(survey, function(x) mean(as.numeric(x)))
+
+#E
+survey[1:5, ]
+
+#F
+types_houses <- survey$TypesOfHouses
+types_houses
+
+#G
+survey[survey$Sex == "Male" & survey$FathersOccupation == "Farmer", ]
+
+#H
+survey[survey$Sex == "Female" & survey$SiblingsAtSchool >= 5, ]
+
+#Q2(Answer + code)
+sapply(list(respondents, sex, fathers_occupation,
+            persons_at_home, siblings_at_school, types_of_houses),
+       length)
+#It is important to check the length of each columns first before running the data frame because it avoids the program from mismatching certain objects. Without checking the vectors, there will be a tendency that the program will give a wrong value to a respondent, or it will cause an error. This actually ensures that the data frame is accurate and the values are evenly distributed to the 20 respondents.
+
+#Q3(Answer + code)
+str(survey)
+mean(survey$Sex)
+#Based on the code, it gives an error when getting the average for Sex. This is because Sex is a categorical type of variable, and the numbers are just labels (for Male, it is 1, and Female is 2.) It doesn't make sense to get its average since there's obviously no numbers when classifying someone's sex generally, so it is misleading.
+
+#Q4(Answer + code)
+survey[survey$Sex == 1, ]
+#The code above shows rows with Sex equal to 1. Without the legend, the program can’t tell what 1 means. It might think it is a rank, a score, or “yes.” This proves that coded data can’t explain itself, and it is easy to misread until it is replaced with labels like “Male” and “Female.” In this way, the program could distinguish its meaning properly.
+
+#Q5(Answer + code)
+sex <- c(2, 2, 1, 2, 2, 2, 2, 2, 2, 2,
+         1, 2, 2, 2, 2, 2, 2, 2, 1, 2)
+
+survey <- data.frame(
+  Respondent        = respondents,
+  Sex               = sex,
+  FathersOccupation = fathers_occupation,
+  PersonsAtHome     = persons_at_home,
+  SiblingsAtSchool  = siblings_at_school,
+  TypesOfHouses     = types_of_houses
+)
+
+males <- survey[survey$Sex == 1, ]
+nrow(males)
+sum(survey$Sex == 1)
+#There are 3 males out of 20 which are respondents 3, 11, and 19. That is too small to be confident about a larger population. If only one person changed, the percentages would have major changes. The sample also seems unbalanced (3 males, 17 females), so any pattern could easily be a coincidence and be treated as descriptive instead.
+
+#Q6(Answer + code)
+summary(survey)
+#Based on the code, R only looks at how the data is stored, and these columns were initially stored as numbers. So R gives the min, mean, and max, even when that doesn’t make sense for other vectors. R can’t read the legend, so it doesn’t know that 1 and 2 mean Male and Female. How data is stored is not the same as what it means, and R should be aware of the meaning using factor().
+
+#Q7(Answer + code)
+mean(survey$PersonsAtHome)
+mean(survey$Sex)
+#The mean of PersonsAtHome is meaningful, while the mean of Sex is not. PersonsAtHome is numerical, so its mean of about 6.4 prints the average household in this sample that has 6 people. Sex is a nominal variable or categorical, so 1 and 2 are only labels for Male and Female. The mean of 1.85 doesn't describe anything real, since no one has a sex of 1.85. A better summary for Sex is a count, such as 17 out of 20 respondents being female.
+```
+
