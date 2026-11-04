@@ -1,0 +1,107 @@
+---
+title: "R Exercise 8"
+author: "Azaleah Gicole"
+date: "2026-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A - Creating Data Frames
+
+```{r}
+#Q1(Codes)
+
+#A
+scores <- c(Ana = 78, Ben = 92, Cid = 85, Dex = 92, Eli = 67, Fay = 88, Gio = 74)
+scores
+
+#B
+sort(scores)
+sort(scores, decreasing = TRUE)
+
+#C
+sorted_asc <- sort(scores)
+sorted_asc
+
+#D
+subject <- c("Science", "Math", "English", "Filipino", "PE")
+incomplete <- c(85, NA, 90, 70, NA, 95)
+subject
+incomplete
+
+#E
+sort(subject)
+
+#F
+sort(incomplete)
+
+#TODO_1
+sort(incomplete, na.last = TRUE)
+
+#Q2(Answer + code)
+sort(scores)
+#Yes, the names stayed attached to their original values. This matters because a score is only useful if you know whose it is. If the names did not follow their values, the highest number would be paired with a different person. The rankings will be wrong and it would also be unfair for the students if this happened in real life.
+
+#Q3(Answer + code)
+min(incomplete)
+sort(incomplete)[1]
+#The sort() function removes the NA values without any warning, so the data looks complete. The first value, 70, looks like the lowest score, but two scores are missing and they could be lower. There will be a tendency that the program prints the wrong lowest scores without me knowing. Checking for NA first shows the problem.
+
+#Q4(Answer + code)
+order(scores)
+sort(scores)
+scores[order(scores)]
+#The sort(student_scores) returns the sorted values themselves, while the order(student_scores) returns the positions of the values in the sorted order. Position 5 is Eli, who has the lowest score, then position 7 is Gio, and same goes to the other students. And yes, both have the same values. Using the positions from order() to index scores rearranges the vector into ascending order, which is exactly what sort() produces.
+
+#Q5(Answer + code)
+students <- data.frame(
+  name    = c("Ana", "Ben", "Cid", "Dex", "Eli", "Fay", "Gio"),
+  score   = c(78, 92, 85, 92, 67, 88, 74),
+  section = c("A", "B", "A", "B", "A", "B", "A")
+)
+students
+
+students[order(students$score), ]
+
+students[order(students$score, decreasing = TRUE), ]
+
+#Q6(Answer + code)
+order(scores)
+#The order(scores) returns 5 7 1 3 6 2 4. These are positions, not scores. This function prints which element should come first, second, third, and so on. This doesn't make sense and does nothing about names or scores, so it should use an index, like scores[order(scores)].
+
+#Q7(Answer + code)
+try(sort(students))
+#The sort() only works on one vector, so it can't sort the whole table If each column were sorted on its own, the names, scores, and sections would mix up and no row would match a real student. While the order() gives row positions based on one column, so students[order(students$score), ] moves whole rows together and keeps every student's info in a correct position.
+
+#Q8(Answer + code)
+#TODO_2
+rank(scores)
+cbind(scores, rank = rank(scores))
+
+#A(TODO_3)
+rank(scores)[c("Ben", "Dex")]
+#Both Ben and Dex each received a rank of 6.5.
+
+#B
+#By default, rank() ranks from lowest to highest, so the highest score gets the biggest rank, not the first rank. Ben and Dex are tied for the top two positions, 6 and 7. R gives tied values the average of the positions they share, so each has 6.5 results. This is fair because they both share the same score and rank.
+
+#Q8 - Sales
+#A
+sales <- data.frame(
+  employee   = c("Rey", "Sam", "Tin", "Uma", "Val"),
+  units_sold = c(120, 145, 145, 98, 130)
+)
+
+sales$rank <- rank(-sales$units_sold)
+sales
+
+#B
+sales[order(sales$units_sold, decreasing = TRUE), ]
+
+#Q9(Answer)
+#No, order() couldn't solve the whole problem. The order() only gives the row positions needed to arrange the table, so it can reorder the rows but it does not print each employee’s standing. It also cannot show that two employees are tied. However, rank() gives every employee an actual rank number, and it shares the rank when there are employees with the same units sold, example is the 1.5 for Sam and Tin. So rank() answers the place/rank of the person and order() answers what the order of rows are shown.
+```
+
