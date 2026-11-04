@@ -1,0 +1,114 @@
+---
+title: "R Exercise 9"
+author: "Azaleah Gicole"
+date: "2026-11-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A - Creating Data Frames
+```{r}
+#Q1
+#A
+shoesize <- data.frame(
+  ShoeSize = c(6.5, 9.0, 8.5, 8.5, 10.5, 7.0, 9.5, 9.0, 13.0, 7.5, 10.5, 8.5, 12.0, 10.5,
+               13.0, 11.5, 8.5, 5.0, 10.0, 6.5, 7.5, 8.5, 10.5, 8.5, 10.5, 11.0, 9.0, 13.0),
+  Height   = c(66.0, 68.0, 64.5, 65.0, 70.0, 64.0, 70.0, 71.0, 72.0, 64.0, 74.5, 67.0, 71.0, 71.0,
+               77.0, 72.0, 59.0, 62.0, 72.0, 66.0, 64.0, 67.0, 73.0, 69.0, 72.0, 70.0, 69.0, 70.0),
+  Gender   = c("F", "F", "F", "F", "M", "F", "F", "F", "M", "F", "M", "F", "M", "M",
+               "M", "M", "F", "F", "M", "F", "F", "M", "M", "F", "M", "M", "M", "M")
+)
+
+length(shoesize$ShoeSize)
+length(shoesize$Height)
+length(shoesize$Gender)
+
+write.csv(shoesize, "shoesize.csv", row.names = FALSE)
+
+#B
+shoe <- read.csv("shoesize.csv")
+tail(shoe, 5)
+
+#C
+str(shoe)
+head(shoe)
+#ShoeSize and Height are in a numeric form, and Gender is a character variable.
+
+#D
+dim(shoe)
+nrow(shoe)
+ncol(shoe)
+#The table has 28 rows and 3 columns.
+
+#E
+summary(shoe)
+str(shoe)
+#The str() function shows how the data is built that includes the size, the type of columns, and the first few values. Meanwhile, summary() shows statistics for each column, like the minimum, maximum, mean, and median.
+
+#F
+males   <- shoe[shoe$Gender == "M", c("ShoeSize", "Height", "Gender")]
+females <- shoe[shoe$Gender == "F", c("ShoeSize", "Height", "Gender")]
+
+males
+females
+nrow(males)
+nrow(females)
+#Based on the code, males and females both have 14 rows. Each one shows only the shoe size and height of each gender.
+
+#G
+mean(shoe$ShoeSize)
+mean(shoe$Height)
+#The mean shoe size is about 9.41 and the mean height is about 68.57 inches.
+
+#H
+cor(shoe$ShoeSize, shoe$Height)
+
+plot(shoe$ShoeSize, shoe$Height,
+     xlab = "Shoe Size", ylab = "Height (inches)",
+     main = "Shoe Size vs Height")
+abline(lm(Height ~ ShoeSize, data = shoe), col = "red")
+#There is a relationship between the two. The correlation is 0.78, which is strong and positive. This means that people with bigger shoe sizes are taller. The points on the plot go upward from left to right. It indicates that taller people usually have longer feet. But the relationship is not perfect, since some people with the same shoe size can differ in terms of height.
+
+#Q2
+shoes <- read.csv("shoesize.csv")
+shoes$Gender <- factor(shoes$Gender,
+                       levels = c("F", "M"),
+                       labels = c("Female", "Male"))
+str(shoes)
+levels(shoes$Gender)
+
+#Q3
+#R Markdown looks for files in the folder where the .Rmd file is saved. If it the .Rmd and shoesize.csv is in the same folder, the code works on any computer. If R used a different folder, it will be hard to find the file.
+
+#Q4
+str(shoes)
+#R read Gender as text, which I did expect because it has letters. If ShoeSize were imported as text because of a stray value like "N/A", the program couldn't do math. The mean() and cor() functions would fail, and sorting would be alphabetical, so "10" comes before "9" if trying to run the code.
+
+#Q5
+head(shoes)
+tail(shoes)
+#The head() only shows the first rows, and tail() shows the last rows. Problems at the end of the file, like missing rows, would not show up if only head() is used. Checking both shows the whole file was imported.
+
+#Q6
+#A(TODO_1)
+cor(shoes$ShoeSize, shoes$Height)
+
+#B(TODO_2)
+shoes[shoes$ShoeSize >= 11, ]
+
+#Q7
+females <- shoes[shoes$Gender == "Female", ]
+males   <- shoes[shoes$Gender == "Male", ]
+
+mean(females$Height)
+mean(females$ShoeSize)
+mean(males$Height)
+mean(males$ShoeSize)
+
+cor(females$ShoeSize, females$Height)
+cor(males$ShoeSize, males$Height)
+#The male subsets are taller and have bigger shoes than the female subset. The mean height is 71.46 inches and mean shoe size is 10.96 for males. For the females, the mean height is 65.68 and the mean shoe size is 7.86. Shoe size and height are still related within each group, with a correlation of 0.49 for females and 0.52 for males. That is weaker than the 0.78 for everyone together, so this means gender is an important factor in this case.
+```
