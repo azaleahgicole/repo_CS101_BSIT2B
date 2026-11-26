@@ -1,0 +1,129 @@
+---
+title: "R Exercise 10"
+author: "Azaleah Gicole"
+date: "2026-11-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part A - Predict the Output
+
+#Q1
+#The "m" is filled by column, so it is printed as:
+```r
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+```
+#Each line has their own purpose, with the first one which is apply(m, 1, sum) gives "[1] 9 12". MARGIN = 1 works across all rows, so it computes 1+3+5 and 2+4+6. The second one, apply(m, 2, sum) prints out "[1] 3 7 11". MARGIN = 2 works down all the columns, which are 1+2, 3+4 and 5+6. Meanwhile, class(lapply(1:3, function(i) i^2)) gives "list". This is because lapply() always returns a list. The sapply(1:3, function(i) i^2) gives "[1] 1 4 9" because sapply() simplifies the list of single numbers into numeric vectors. While sapply(c('a', 'bb', 'ccc'), nchar) gives a named integer vector that looks like this:
+```r
+  a  bb ccc 
+  1   2   3 
+```
+#Next, the Character input makes sapply() use the strings as names, and "nchar" counts the characters. The mapply(function(x, y) x * y, 1:3, 4:6) gives "[1] 4 10 18". It multiplies the arguments in parallel, examples are 1×4, 2×5, 3×6. Then, the tapply(c(10, 20, 30, 40), c('u', 'v', 'u', 'v'), sum) prints out this:
+```r
+ u  v 
+40 60 
+```
+#It basically groups the values by label and sums each group: u = 10+30, v = 20+40.
+
+#Q2
+```{r}
+scores <- matrix(c(70, 85, 90,
+                   60, 75, 80,
+                   88, 92, 79),
+                 nrow = 3, byrow = TRUE,
+                 dimnames = list(c('Ana', 'Ben', 'Cara'), c('Math', 'Sci', 'Eng')))
+
+temps <- list(Mon = c(30, 32, 31), Tue = c(29, 33), Wed = c(31, 34, 35, 30))
+```
+
+#B.1
+```{r}
+apply(scores, 1, mean)
+
+apply(scores, 2, max)
+
+apply(scores, 1, function(r) names(r)[which.max(r)])
+```
+
+#B.2
+```{r}
+lapply(temps, mean)
+
+sapply(temps, length)
+
+vapply(temps, range, numeric(2))
+```
+#The "range()" returns two values (min and max) for each day. "vapply()" has been told each result has length 2 (numeric(2)), so it stacks the results as columns of a 2-row matrix, one column per day. A function returning one value per element gives a vector, and a function returning several equal-length values gives a matrix.
+
+#Q3
+```{r}
+p <- c(1000, 2000)
+r <- c(0.05, 0.04)
+n <- c(2, 3)
+
+mapply(function(p, r, n) p * (1 + r)^n, p, r, n)
+# [1] 1102.500 2249.728
+
+mapply(function(p, n, r) p * (1 + r)^n,
+       p = c(1000, 2000), n = c(2, 3),
+       MoreArgs = list(r = 0.045))
+# [1] 1092.025 2282.332
+```
+
+#Q4
+```{r}
+# (a) Mean Sepal.Length per species
+tapply(iris$Sepal.Length, iris$Species, mean)
+#     setosa versicolor  virginica 
+#      5.006      5.936      6.588 
+
+# (b) Number of cars per cyl and am combination
+table(mtcars$cyl, mtcars$am)
+#      0  1
+#   4  3  8
+#   6  4  3
+#   8 12  2
+
+# (c) Mean mpg per cyl, ignoring NAs
+tapply(mtcars$mpg, mtcars$cyl, mean, na.rm = TRUE)
+#        4        6        8 
+# 26.66364 19.74286 15.10000 
+```
+
+## Part A - Debugging
+
+#Q5
+```r
+sapply(list(a = 1:3, b = 4:6), mean())
+```
+#For the mistake no. 1: The `mean()` is called with no argument, which causes an error. Pass the function itself, not a call to it.
+```{r}
+sapply(list(a = 1:3, b = 4:6), mean)
+```
+
+```{r}
+apply(matrix(1:6, nrow = 3), 1, mean)
+```
+#MARGIN = 1 averages rows (3 of them). But since columns are what we wanted for our reult, MARGIN should be 2.
+```{r}
+apply(matrix(1:6, nrow = 3), 2, mean)
+```
+
+```{r}
+df <- data.frame(n = c(1, 2), s = c('a', 'b'))
+apply(df, 2, class)
+```
+#The "apply()" converts the data frame to a character matrix first, so every column reports "character". It is best to use "sapply()" since it treats columns as list elements.
+```{r}
+sapply(df, class)
+```
+
+#Q6
+#A - The "lapply()" always returns a list, with one element per input item. Meanwhile, "sapply()" is a wrapper that runs "lapply()" and then tries to simplify the list into a vector or matrix when the results are the same length. That is convenient, but the return type can change depending on the data. An empty input gives an empty "list()", and uneven results stay a list. So in this case, I'd choose "vapply()" when I want a guaranteed return type, such as inside functions or packages. If I declare the expected result and if a result doesn't match, it throws an error instead of returning something random. It is also safe on empty input.
+
+#This does the split and the mean in one step. It returns a named vector with one mean per group instead of a whole list like `lapply(split(x, g), mean)`.
